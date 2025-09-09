@@ -1,4 +1,5 @@
 Apresentação das pastas
+```
 src/
 ├── main/
 │   └── java/
@@ -40,9 +41,11 @@ src/
 │                   └── ...
 │               └── publishers/
 │                   └── ...
-Strategies para lidar com cada tipo de operação
-A ideia aqui é ter uma Strategy para cada operação: Criação, atualização, baixa, etc
+```
 
+### Strategies para lidar com cada tipo de operação
+A ideia aqui é ter uma Strategy para cada operação: Criação, atualização, baixa, etc
+```java
 package com.empresa.autores.application.strategies;
 
 import com.empresa.autores.domain.model.Author;
@@ -53,9 +56,12 @@ public interface AuthorCreationStrategy {
     void validate(Author author, BookData bookData);
     void execute(Author author, BookData bookData);
 }
-SubStrategies para quando cada tipo de operação tem um subtipo
+```
+
+### SubStrategies para quando cada tipo de operação tem um subtipo
 A ideia aqui é ter uma sub strategy dentro da strategy, para quando uma operação tem várias operações dentro dela: Atualização que possuí inclusão de campos, alteração, ou exclusão
 
+```java
 package com.empresa.autores.application.strategies;
 
 import com.empresa.autores.domain.model.Author;;
@@ -90,7 +96,11 @@ public class IndieAuthorStrategy implements AuthorCreationStrategy {
         }
     }
 }
-Factory para lidar com cada Strategy
+```
+
+### Factory para lidar com cada Strategy
+
+```java
 package com.empresa.autores.application.strategies;
 
 import com.empresa.autores.domain.model.AuthorType;
@@ -113,7 +123,11 @@ public class AuthorStrategyFactory {
         return strategies.get(type);
     }
 }
-Handler para gerenciar criação de autores
+```
+
+### Handler para gerenciar criação de autores
+
+```java
 package com.empresa.autores.application.handlers;
 
 import com.empresa.autores.application.commands.CreateAuthorCommand;
@@ -183,7 +197,11 @@ public class CreateAuthorHandler  {
         }
     }
 }
-Comando para atrelar autor ao livro
+```
+
+### Comando para atrelar autor ao livro
+
+```java 
 package com.empresa.livros.application.commands;
 
 import com.empresa.autores.domain.model.AuthorType;
@@ -197,7 +215,11 @@ public record CommitBookToAuthorCommand(
     AuthorType authorType,
     BookData bookData
 ) implements Command {}
-Publicador de comandos para autores
+```
+
+### Publicador de comandos para autores
+
+```java
 package com.empresa.autores.infrastructure.messaging;
 
 import com.empresa.livros.application.commands.CommitBookToAuthorCommand;
@@ -227,7 +249,10 @@ public class AuthorCommandProducer {
         queueService.sendCommand(xpto2, command);
     }
 }
-Factory para consumidor de livros (a partir da fila)
+```
+### Factory para consumidor de livros (a partir da fila)
+
+```java
 package com.empresa.livros.infrastructure.messaging;
 
 import com.empresa.livros.application.commands.CommitBookToAuthorCommand;
@@ -258,7 +283,11 @@ public class BookCommandConsumer {
         unlinkHandler.handle(command);
     }
 }
-Handler para lidar com comprometimento de livro
+```
+
+### Handler para lidar com comprometimento de livro
+
+```java
 package com.empresa.livros.application.handlers;
 
 import com.empresa.livros.application.commands.CommitBookToAuthorCommand;
@@ -323,3 +352,4 @@ public class CommitBookToAuthorHandler implements CommandHandler<CommitBookToAut
         );
     }
 }
+```
